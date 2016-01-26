@@ -1,14 +1,3 @@
-#
-#                        _ _            _ _   
-#                       (_|_)          | (_)  
-#    ___ _ __ ___   ___  _ _ ______ ___| |_   
-#   / _ \ '_ ` _ \ / _ \| | |______/ __| | |  
-#  |  __/ | | | | | (_) | | |     | (__| | |  
-#   \___|_| |_| |_|\___/| |_|      \___|_|_|  
-#                      _/ |                   
-#                     |__/                    
-#
-
 EMOJI_CLI_DICT="${0:A:h}/dict/emoji.json"
 : "${EMOJI_CLI_FILTER:="fzf-tmux -d 15%:fzf:peco:percol"}"
 : "${EMOJI_CLI_KEYBIND:="^s"}"
@@ -106,9 +95,9 @@ emoji::emoji_get() {
     _EMOJI_CLI_FILTER="$(available "$EMOJI_CLI_FILTER")"
 
     cat <"$EMOJI_CLI_DICT" \
-        | jq -r '.[]|"\(.emoji) \(":" + .aliases[0] + ":")"' \
+        | jq -r '.[]|"\(.emoji) \(" " + .description) \("[:" + .aliases[0] + ":]")"' \
         | eval "$_EMOJI_CLI_FILTER" \
-        | awk '{print $2}'
+        | awk 'BEGIN { FS = ":" } ; { print ":" $2 ":" }'
 }
 
 emoji::emoji_get_with_tag() {
